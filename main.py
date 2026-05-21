@@ -1,9 +1,11 @@
 import os
 import sys
 
-from .document_ocr import DocumentOCR
-from .table_recognizer import TableRecognizer
-from .screenshot_ocr import ScreenshotOCR
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from document_ocr import DocumentOCR
+from table_recognizer import TableRecognizer
+from screenshot_ocr import ScreenshotOCR
 
 
 def main():
