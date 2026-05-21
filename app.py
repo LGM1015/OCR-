@@ -16,7 +16,6 @@ os.environ["PADDLE_HOME"] = PADDLE_HOME
 
 from document_ocr import DocumentOCR
 from table_recognizer import TableRecognizer
-from screenshot_ocr import ScreenshotOCR
 
 app = Flask(__name__)
 CORS(app)
@@ -130,80 +129,80 @@ def table_ocr():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route("/api/screenshot-ocr", methods=["POST"])
-def screenshot_ocr():
-    """截图识别 API - 接收截图并识别"""
-    try:
-        data = request.get_json()
-        if not data or "image" not in data:
-            return jsonify({"error": "请提供 base64 图片"}), 400
+# @app.route("/api/screenshot-ocr", methods=["POST"])
+# def screenshot_ocr():
+#     """截图识别 API - 接收截图并识别"""
+#     try:
+#         data = request.get_json()
+#         if not data or "image" not in data:
+#             return jsonify({"error": "请提供 base64 图片"}), 400
+#
+#         image_data = data["image"]
+#         if image_data.startswith("data:"):
+#             image_data = image_data.split(",")[1]
+#
+#         img_bytes = base64.b64decode(image_data)
+#         temp_path = "output/temp_screenshot.png"
+#         with open(temp_path, "wb") as f:
+#             f.write(img_bytes)
+#
+#         ocr = ScreenshotOCR()
+#         result = ocr.from_file(temp_path)
+#
+#         try:
+#             os.remove(temp_path)
+#         except:
+#             pass
+#
+#         return jsonify({
+#             "success": True,
+#             "text": result["text"],
+#             "line_count": result["line_count"],
+#         })
+#
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 500
 
-        image_data = data["image"]
-        if image_data.startswith("data:"):
-            image_data = image_data.split(",")[1]
 
-        img_bytes = base64.b64decode(image_data)
-        temp_path = "output/temp_screenshot.png"
-        with open(temp_path, "wb") as f:
-            f.write(img_bytes)
-
-        ocr = ScreenshotOCR()
-        result = ocr.from_file(temp_path)
-
-        try:
-            os.remove(temp_path)
-        except:
-            pass
-
-        return jsonify({
-            "success": True,
-            "text": result["text"],
-            "line_count": result["line_count"],
-        })
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-@app.route("/api/screenshot-region", methods=["POST"])
-def screenshot_region():
-    """Windows 区域截图 + OCR"""
-    try:
-        from screenshot_ocr import select_region
-        import time
-
-        temp_path = None
-
-        # 通过子进程启动 tkinter 截图（避免阻塞）
-        import subprocess
-        result = subprocess.run(
-            ["python", "-c",
-             "from screenshot_ocr import select_region; import sys; "
-             "p = select_region(); print(p if p else 'CANCELLED')"],
-            capture_output=True, text=True, timeout=30
-        )
-
-        temp_path = result.stdout.strip()
-
-        if not temp_path or temp_path == "CANCELLED":
-            return jsonify({"error": "已取消截图"}), 400
-
-        ocr = ScreenshotOCR()
-        ocr_result = ocr.from_file(temp_path)
-
-        try:
-            os.remove(temp_path)
-        except:
-            pass
-
-        return jsonify({
-            "success": True,
-            "text": ocr_result["text"],
-            "line_count": ocr_result["line_count"],
-        })
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+# @app.route("/api/screenshot-region", methods=["POST"])
+# def screenshot_region():
+#     """Windows 区域截图 + OCR"""
+#     try:
+#         from screenshot_ocr import select_region
+#         import time
+#
+#         temp_path = None
+#
+#         # 通过子进程启动 tkinter 截图（避免阻塞）
+#         import subprocess
+#         result = subprocess.run(
+#             ["python", "-c",
+#              "from screenshot_ocr import select_region; import sys; "
+#              "p = select_region(); print(p if p else 'CANCELLED')"],
+#             capture_output=True, text=True, timeout=30
+#         )
+#
+#         temp_path = result.stdout.strip()
+#
+#         if not temp_path or temp_path == "CANCELLED":
+#             return jsonify({"error": "已取消截图"}), 400
+#
+#         ocr = ScreenshotOCR()
+#         ocr_result = ocr.from_file(temp_path)
+#
+#         try:
+#             os.remove(temp_path)
+#         except:
+#             pass
+#
+#         return jsonify({
+#             "success": True,
+#             "text": ocr_result["text"],
+#             "line_count": ocr_result["line_count"],
+#         })
+#
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
