@@ -1,6 +1,7 @@
 # OCR 工具集
 
 基于 PaddleOCR 的在线 OCR 工具，支持文档识别、表格提取功能。
+<img width="2122" height="1077" alt="image" src="https://github.com/user-attachments/assets/2150d599-b2c9-45f7-b3cd-528055b0dcfd" />
 
 ## 功能特性
 
