@@ -2,10 +2,13 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# 安装系统依赖（OpenCV 需要 libGL）
+# 安装系统依赖（PaddlePaddle + OpenCV 需要）
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgl1 \
     libglib2.0-0 \
+    libgomp1 \
+    libpthread-stubs0-dev \
+    libgthread-2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
 # 复制依赖文件
